@@ -9,4 +9,6 @@ import java.time.LocalDate;
 public interface EDevletRepository extends JpaRepository<EDevlet, Integer> {
     boolean existsByNameAndLastNameAndOfDateBirthAndIdentificationNumber
             (String name, String lastName, LocalDate ofDateBirth, String identificationNumber);
+
+
 }

@@ -1,6 +1,5 @@
-package turkcell.starbucks.starbucks.entities;
+package turkcell.starbucks.starbucks.business.dto.requests.creates;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,16 +7,11 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "edevletdatas")
-public class EDevlet {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class CreateEDevletRequest {
 
     private String name;
     private String lastName;

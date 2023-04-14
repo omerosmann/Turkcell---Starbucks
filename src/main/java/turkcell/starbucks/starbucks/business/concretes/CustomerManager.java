@@ -2,9 +2,8 @@ package turkcell.starbucks.starbucks.business.concretes;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.codec.CodecConfigurer;
 import org.springframework.stereotype.Service;
-import turkcell.starbucks.starbucks.business.abstracts.EDevletService;
+import turkcell.starbucks.starbucks.business.abstracts.FakeEDevletService;
 import turkcell.starbucks.starbucks.entities.Customer;
 import turkcell.starbucks.starbucks.repository.CustomerRepository;
 import turkcell.starbucks.starbucks.business.abstracts.CustomerService;
@@ -21,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomerManager implements CustomerService {
     private final ModelMapper mapper;
-    private final EDevletService eDevletService;
+    private final FakeEDevletService eDevletService;
     private final CustomerRepository repository;
 
     @Override
@@ -48,10 +47,9 @@ public class CustomerManager implements CustomerService {
     @Override
     public CreateCustomerResponse add(CreateCustomerRequest request) {
         eDevletService.customerVerification(request);
-
         Customer customer = mapper.map(request, Customer.class);
-
         customer.setId(0);
+        addCustomerControl(customer);
         repository.save(customer);
 
         CreateCustomerResponse response = mapper.map(customer, CreateCustomerResponse.class);
@@ -62,12 +60,9 @@ public class CustomerManager implements CustomerService {
     @Override
     public UpdateCustomerResponse update(int id, UpdateCustomerRequest request) {
         eDevletService.customerVerification(request);
-
         Customer customer = mapper.map(request, Customer.class);
-
         customer.setId(id);
         repository.save(customer);
-
         UpdateCustomerResponse response = mapper.map(customer, UpdateCustomerResponse.class);
 
         return response;
@@ -75,4 +70,13 @@ public class CustomerManager implements CustomerService {
 
     @Override
     public void delete(int id) { repository.deleteById(id); }
+
+    private void addCustomerControl(Customer customer){
+        List<Customer> customers = repository.findAll();
+
+        for (Customer customer1 : customers) {
+            if(customer1.getIdentificationNumber().equals(customer.getIdentificationNumber()))
+                throw new RuntimeException("There is a customer record.");
+        }
+    }
 }
